@@ -98,7 +98,7 @@ variable "wi_iam_roles_list" {
 variable "enable_private_endpoint" {
   description = "When true public access to cluster (master) endpoint is disabled.  When false, it can be accessed both publicly and privately."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "enable_private_nodes" {
@@ -110,7 +110,7 @@ variable "enable_private_nodes" {
 variable "master_ipv4_cidr_block" {
   description = "CIDR of the master network.  Range must not overlap with any other ranges in use within the cluster's network.  Left blank for a public GKE endpoint but needs to be specified if provisioning a private GKE endpoint."
   type        = string
-  default     = ""
+  default     = "10.100.100.0/28"
 }
 
 variable "iap_proxy_ip_cidr" {

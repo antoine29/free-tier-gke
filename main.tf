@@ -25,7 +25,7 @@ resource "google_container_cluster" "primary" {
 
   name                = var.gke_cluster_name
   location            = var.regional ? var.region : var.zone
-  deletion_protection = var.deletion_protection
+  deletion_protection = false
 
   # Can be single or multi-zone, as
   # https://www.terraform.io/docs/providers/google/r/container_cluster.html#node_locations
@@ -229,3 +229,51 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
   }
 }
+
+# resource "google_project_service" "computer" {
+#   project = var.project_id
+#   service = "computer.googleapis.com"
+#
+#   timeouts {
+#     create = "30m"
+#     update = "40m"
+#   }
+#
+#   disable_dependent_services = true
+# }
+#
+# resource "google_project_service" "container" {
+#   project = var.project_id
+#   service = "container.googleapis.com"
+#
+#   timeouts {
+#     create = "30m"
+#     update = "40m"
+#   }
+#
+#   disable_dependent_services = true
+# }
+
+resource "google_service_account" "gh-sa" {
+  account_id   = "github-actions"
+  display_name = "service account to access the cluster from gh actions"
+}
+
+resource "google_service_account_iam_binding" "container-service-agent" {
+  service_account_id = google_service_account.gh-sa.name
+  role               = "roles/container.serviceAgent"
+
+  members = [
+    "serviceAccount:${google_service_account.gh-sa.email}",
+  ]
+}
+
+# resource "google_service_account_iam_binding" "storage-admin" {
+#   service_account_id = google_service_account.gh-sa.name
+#   role               = "roles/storage.admin"
+#
+#   members = [
+#     "serviceAccount:${google_service_account.gh-sa.email}",
+#   ]
+# }
+#

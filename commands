@@ -1,0 +1,12 @@
+❯ gcloud services enable container.googleapis.com
+❯ gcloud services enable compute.googleapis.com
+
+
++ service account
+- three created by default
+
+
+
++ network endpoint group
+- 0 crated by tf
+- guess created when setting up creds
